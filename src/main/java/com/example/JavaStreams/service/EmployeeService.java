@@ -73,8 +73,9 @@ public class EmployeeService {
 
         Stream.of(employeeBySalary).map(Map::entrySet).flatMap(Collection::stream).forEach(System.out::println);
 
-        return Stream.of(employeeBySalary).map(Map::keySet).flatMap(Collection::stream).map(employeeBySalary::get)
-                .flatMap(Collection::stream).collect(Collectors.toList());
+        return employeeBySalary.entrySet().stream().filter(x -> x.getKey() == true).flatMap(x -> x.getValue().stream())
+                .collect(Collectors.toList());
+
     }
 
     public void addManyEmployee(List<Employee> employee) {
