@@ -60,11 +60,14 @@ public class EmployeeService {
 
         Stream.of(employeeByChar).map(Map::entrySet).flatMap(Collection::stream).forEach(System.out::println);
         Stream.of(employeeByChar).forEach(System.out::println);
-        // return employeeByChar.keySet().stream().map(employeeByChar::get).flatMap(Collection::stream).collect(Collectors.toList());
-        return Stream.of(employeeByChar).map(Map::keySet).flatMap(Collection::stream).map(employeeByChar::get)
-                .flatMap(Collection::stream).collect(Collectors.toList());
-
-
+        // we are grouping together the employees with same initials together and pushing it into list
+        /*
+            employeeByChar -> {'A' : {Amit, Abhishek, Ankit}}
+                               {'J': {Jack, Jill, John}}
+             output - {Amit, Abhishek, Ankit, Jack, Jill, John}
+         */
+        return employeeByChar.entrySet().stream()
+                .flatMap(x -> x.getValue().stream()).collect(Collectors.toList());
     }
 
     public List<Employee> groupBySalary() {
@@ -73,9 +76,9 @@ public class EmployeeService {
 
         Stream.of(employeeBySalary).map(Map::entrySet).flatMap(Collection::stream).forEach(System.out::println);
 
-        return employeeBySalary.entrySet().stream().filter(x -> x.getKey() == true).flatMap(x -> x.getValue().stream())
-                .collect(Collectors.toList());
-
+        // we are grouping together the employees with salary less than and greater than 1000 and then pushing it into list
+        return employeeBySalary.keySet().stream().map(employeeBySalary::get)
+                .flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     public void addManyEmployee(List<Employee> employee) {
