@@ -39,13 +39,18 @@ public class EmployeeService {
     }
 
     public String getStats() {
+        /*
+        (mapToInt vs map) for mapping a stream to integer types --->
+        1. mapToInt gives us IntStream which supports methods like sum, max, min. InStream is stream of primitive int data type and it is efficient as it avoids auto boxing/unboxing of Integer data types.
+        2. map gives Stream<Integer> which does not support sum, max, min. To implement sum, we need to provide its implementation through reduce function manually
+        */
         int maxSalary = getEmployeeList().stream().filter(Objects::nonNull).mapToInt(Employee::getSalary).max().orElseThrow(RuntimeException::new);
         int minSalary = getEmployeeList().stream().filter(Objects::nonNull).mapToInt(Employee::getSalary).min().orElseThrow(RuntimeException::new);
         double averageSalary = getEmployeeList().stream().filter(Objects::nonNull).mapToInt(Employee::getSalary).average().orElseThrow(RuntimeException::new);
         int sumSalary = getEmployeeList().stream().filter(Objects::nonNull).mapToInt(Employee::getSalary).sum();
         //learning reduce -- We can apply a function over each element of stream starting with initial value provided.
         // example - give me the sum of (salary / 2) for all the employees
-        int sumSalaryReduced = getEmployeeList().stream().filter(Objects::nonNull).mapToInt(Employee::getSalary).reduce(0, (x, y) -> x + y / 2);
+        int sumSalaryReduced = getEmployeeList().stream().filter(Objects::nonNull).map(Employee::getSalary).reduce(0, (x, y) -> x + y / 2);
 
         String stats = "maxSalary:: " + maxSalary + " minSalary:: " + minSalary + " averageSalary:: " + averageSalary + " sumSalary:: " + sumSalary
                 + " sumSalaryReduced:: " + sumSalaryReduced;
